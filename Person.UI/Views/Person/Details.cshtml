@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Person Details";
+}
+
+<h2 id="heading">Details: </h2>
+
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <td id="personId"></td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td id="personName"></td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td id="personEmail"></td>
+    </tr>
+</table>
+
+<a href="/Person/Index" class="btn btn-info">Back to List</a>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+
+        var url = window.location.href;
+
+        // Split the URL by the '/' character
+        var segments = url.split('/');
+
+        // The id is the last segment in this case
+        var id = segments[segments.length - 1];
+
+
+        const apiUrl = `https://localhost:7153/api/Person/${id}`;
+
+   
+
+        $.ajax({
+            url: apiUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function (person) {
+                $('#heading').append(person.name);
+                $('#personId').text(person.id);
+                $('#personName').text(person.name);
+                $('#personEmail').text(person.email);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching person:', error);
+            }
+        });
+    });
+</script>

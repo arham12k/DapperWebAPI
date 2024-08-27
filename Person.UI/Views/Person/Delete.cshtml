@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Delete Person";
+}
+
+<h2 id="heading">Delete: </h2>
+
+<form id="deleteForm">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" disabled>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" disabled>
+    </div>
+    <button type="submit" class="btn btn-danger mt-2">Delete</button>
+</form>
+
+<a href="/Person/Index" class="btn btn-info mt-2">Back to List</a>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+
+        var url = window.location.href;
+        // Split the URL by the '/' character
+        var segments = url.split('/');
+        // The id is the last segment in this case
+        var id = segments[segments.length - 1];
+
+        const apiUrl = `https://localhost:7153/api/Person/${id}`;
+
+        $.ajax({
+            url: apiUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function (person) {
+                $('#heading').append(person.name);
+                $('#name').val(person.name);
+                $('#email').val(person.email);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching person:', error);
+            }
+        });
+    });
+
+
+    $('#deleteForm').submit(function (event) {
+        event.preventDefault();
+
+
+        var confirmDelete=confirm("are you sure to delete this record permanantly?")
+
+
+        if (confirmDelete) {
+            var url = window.location.href;
+            // Split the URL by the '/' character
+            var segments = url.split('/');
+            // The id is the last segment in this case
+            var id = segments[segments.length - 1];
+
+            const apiUrl = `https://localhost:7153/api/Person/${id}`;
+
+            $.ajax({
+                url: apiUrl,
+                type: 'DELETE',
+                success: function () {
+                    window.location.href = '/Person/Index';
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error deleting person:', error);
+                }
+            });
+        } else {
+            return
+        }
+
+
+     
+    });
+
+
+
+
+
+</script>
+
+
+
